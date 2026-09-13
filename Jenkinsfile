@@ -10,10 +10,9 @@ pipeline {
     stages {
         stage('AWS ECR Login & Push') {
             steps {
-                withCredentials([
-                    string(credentialsId: 'aws-access-key-id-ankit', variable: 'AWS_ACCESS_KEY_ID'),
-                    string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
-                ]) {
+                withCredentials([aws(credentialsId: 'ankit-aws-credentials',
+                                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     sh """
                         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
                     """
