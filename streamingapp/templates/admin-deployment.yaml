@@ -1,0 +1,30 @@
+# admin-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-deployment
+spec:
+  replicas: {{ .Values.services.admin.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+      - name: admin
+        image: "{{ .Values.services.admin.image }}:{{ .Values.services.admin.tag }}"
+        ports:
+        - containerPort: {{ .Values.services.admin.port }}
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: app-secret

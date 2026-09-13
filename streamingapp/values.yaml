@@ -1,0 +1,33 @@
+global:
+  awsRegion: "ap-south-1"
+
+services:
+  auth:
+    image: "624504147976.dkr.ecr.ap-south-1.amazonaws.com/streaming-auth"
+    tag: "1.0.0"
+    replicas: 2
+    port: 3000
+  streaming:
+    image: "624504147976.dkr.ecr.ap-south-1.amazonaws.com/streaming-stream"
+    tag: "1.0.0"
+    replicas: 2
+    port: 3002
+  admin:
+    image: "624504147976.dkr.ecr.ap-south-1.amazonaws.com/streaming-admin"
+    tag: "1.0.0"
+    replicas: 2
+    port: 3003
+  chat:
+    image: "624504147976.dkr.ecr.ap-south-1.amazonaws.com/streaming-chat"
+    tag: "1.0.0"
+    replicas: 2
+    port: 3004
+  frontend:
+    image: "624504147976.dkr.ecr.ap-south-1.amazonaws.com/streaming-frontend"
+    tag: "1.0.0"
+    replicas: 2
+    port: 80
+
+ingress:
+  enabled: true
+  className: "nginx"

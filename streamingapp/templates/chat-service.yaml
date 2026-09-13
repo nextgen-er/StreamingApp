@@ -1,0 +1,25 @@
+# chat-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-svc
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3004
+    targetPort: {{ .Values.services.chat.port }}
+  selector:
+    app: chat
+---
+# admin-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-svc
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3003
+    targetPort: {{ .Values.services.admin.port }}
+  selector:
+    app: admin

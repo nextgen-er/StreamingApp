@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+spec:
+  replicas: {{ .Values.services.auth.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+      - name: auth
+        image: "{{ .Values.services.auth.image }}:{{ .Values.services.auth.tag }}"
+        ports:
+        - containerPort: {{ .Values.services.auth.port }}
+        envFrom:
+        - configMapRef:
+            name: app-config
+        - secretRef:
+            name: app-secret
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.services.auth.port }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.services.auth.port }}
+          initialDelaySeconds: 15
+          periodSeconds: 20

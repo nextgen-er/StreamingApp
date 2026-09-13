@@ -1,0 +1,12 @@
+# streaming-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: streaming-svc
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3002
+    targetPort: {{ .Values.services.streaming.port }}
+  selector:
+    app: streaming
