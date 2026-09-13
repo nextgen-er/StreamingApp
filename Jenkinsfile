@@ -3,17 +3,17 @@ def services = ['streaming-admin', 'streaming-auth', 'streaming-chat', 'streamin
 pipeline {
     agent any
     environment {
-        AWS_REGION = 'ap-south-1' // Change to your AWS region
-        AWS_ACCOUNT_ID = '624504147976' // Change to your 12-digit AWS account ID
+        AWS_REGION = 'ap-south-1'
+        AWS_ACCOUNT_ID = '624504147976'
         ECR_REGISTRY = "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com"
     }
     stages {
         stage('AWS ECR Login & Push') {
             steps {
-                // This wraps your build steps with your AWS credentials securely
-                withCredentials([aws(credentialsId: 'ankit-aws-credentials',
-                                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([
+                    string(credentialsId: 'aws-access-key-id-ankit', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
                     sh """
                         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
                     """
